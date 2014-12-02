@@ -1,5 +1,5 @@
 function detailedReportMain(region){
-	d3.selectAll("#vis_container .svg").remove();
+		d3.selectAll("#vis_container .svg").remove();
 		d3.selectAll("#vis_container .svg_linechart").remove();
 		d3.selectAll("#vis_container .legend").remove();
 		d3.selectAll("#vis .svg").remove();
@@ -91,7 +91,7 @@ function renderlineChart(reportdata_new,label,number){
 
 	var x = d3.scale.ordinal()
 				.domain(reportdata_new.map(function(d){return d.month;}))
-				.rangeRoundBands([0,width],0.1);
+				.rangeRoundBands([0,width],0.5);
 
 	var y = d3.scale.linear()
 				//.domain([d3.min(reportdata_new,function(d){return d.total;}),d3.max(reportdata_new,function(d){return d.total;})])
@@ -134,10 +134,8 @@ function renderlineChart(reportdata_new,label,number){
 		.attr("class","rect")
 		.attr("x", function(d){ return x(d.month);})
 		.attr("y",function(d){ return y(d.total);})
-		.attr("width",x.rangeBand()-10)
-    	.attr("height",function(d){
-    		return height - y(d.total);})
-        //.attr("transform",function(d,i){return "translate("+(i+1)*30+",0)";})
+		.attr("width",x.rangeBand())
+		.attr("height",0)
     	.style("fill",function(d){return colorMonth(d.month);})
     		.on("mouseover",function(d){
     			//console.log("inside hover");
@@ -145,7 +143,11 @@ function renderlineChart(reportdata_new,label,number){
     		})
     		.on("mouseout",function(d){
     			tipDetailed.hide();
-    		});
+    		})
+    	.transition().duration(1200)
+    	.attr("height",function(d){
+    		return height - y(d.total);});
+	
 
 	svg.append("g")
 		.attr("class","x-axis")

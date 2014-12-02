@@ -1,5 +1,4 @@
 function monthDataOutstanding(dropdown_value){
-	alert("IN MOTNH DATA OUTSTANDING");
 	var month;
 	if(dropdown_value == "All"){
 		month=7;

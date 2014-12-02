@@ -65,32 +65,6 @@ function monthDataDisbursed(dropdown_value){
 						loan : [{member:+d.member_special_loan_1_loans,group:+d.member_special_loan_1_groups},{member:+d.member_special_loan_2_loans,group:+d.member_special_loan_2_groups},{member:+d.member_special_loan_3_loans,group:+d.member_special_loan_3_groups}]
 					};
 				});
-	/*var legendSVG = d3.select("#vis").append("svg")
-						.attr("class","legend")
-						.attr("height",50)
-						.attr("width",700);
-
-    var legend = legendSVG.selectAll("g.rect")
-				        .data(monthdata_filter)
-				        .enter()
-				        .append("g")
-			        	.attr("class","rect");
-
-	legend.append("rect")
-			.attr("class","rect_legend")
-    		.attr("width",20)
-    		.attr("height",15)
-        	.attr("transform",function(d,i){return "translate(" + ((i+1)*60)+ ",15)";})
-    		.style("fill",function(d){return color(d.location);})
-    		.on("click",function(d){
-    			clickMarkMain(d)
-    		});
-
-		legend.append("text")
-			.attr("class","text")
-			.attr("y",14)
-			.attr("transform",function(d,i){return "translate(" + ((i+1)*60)+ ",30)";})
-			.text(function(d){return d.location;});*/
 
 	drawLegend("month");
 
@@ -129,12 +103,12 @@ function monthDataRenderGroup(loan_data_group,label){
 						//.attr("transform","translate(20,0)");
 	var y = d3.scale.ordinal()
 				.domain(loan_data_group.map(function(d){return d.location;}))
-				.rangeRoundBands([25,height],0.1);
+				.rangeRoundBands([25,loans_height],0.1);
 
 	var x = d3.scale.linear()
 				//.domain([d3.min(reportdata_new,function(d){return d.total;}),d3.max(reportdata_new,function(d){return d.total;})])
 				.domain([d3.min(loan_data_group,function(d){return +d.total;}),d3.max(loan_data_group,function(d){return +d.total;})])
-				.range([0,width-10]);
+				.range([0,loans_width-10]);
 
 	var	xAxis = d3.svg.axis().scale(x)
 		.orient("bottom").ticks(10).tickFormat(function(s){
@@ -154,8 +128,7 @@ function monthDataRenderGroup(loan_data_group,label){
 		//.attr("x", function(d){ return x(d.total);})
 		.attr("y",function(d){ return y(d.location);})
 		.attr("height",y.rangeBand())
-    	.attr("width",function(d){
-    		return x(+d.total);})
+    	.attr("width",0)
         .attr("transform",function(d,i){return "translate(60,0)";})
     	.style("fill",function(d){return color(d.location);})
     		.on("mouseover",function(d){
@@ -168,11 +141,14 @@ function monthDataRenderGroup(loan_data_group,label){
     		.on("click",function(d){
     			//alert("clicked region");
     			clickMark(d,"groupdata");
-    		});
+    		})
+    	.transition().duration(1200)
+    	.attr("width",function(d){
+    		return x(+d.total);});
 		
 		svg.append("g")
 		.attr("class","x-axis")
-		.attr("transform", "translate(60," + (height) + ")")
+		.attr("transform", "translate(60," + (loans_height) + ")")
 		.call(xAxis)
 			.selectAll("text")	
             .style("text-anchor", "end")
@@ -198,15 +174,16 @@ function monthDataRenderGroup(loan_data_group,label){
 	    	.attr("x1",function(d){ return x(meanValueGroup);})
 	    	.attr("x2", function(d){ return x(meanValueGroup);})
 	    	.attr("y1",25)
-	    	.attr("y2",height)
+	    	.attr("y2",loans_height)
 	    	.style("stroke","red")
 	    	.style("stroke-dasharray","4,3")
 	    	.style("stroke-width","2");
 
 	    svg.append("text")
-			.attr("x",width)
-			.attr("y",height-5)
+			.attr("x",loans_width)
+			.attr("y",loans_height-5)
 			.style("font","black")
+			.style("font-size","10px")
 			.text("Million");
 
 }
@@ -231,11 +208,11 @@ function monthDataRenderMember(loan_data_member,label){
 	  				
 	var y = d3.scale.ordinal()
 				.domain(loan_data_member.map(function(d){return d.location;}))
-				.rangeRoundBands([25,height],0.1);
+				.rangeRoundBands([25,loans_height],0.1);
 
 	var x = d3.scale.linear()
 				.domain([0,d3.max(loan_data_member,function(d){return d.total;})])
-				.range([0,width-10]);
+				.range([0,loans_width-10]);
 
 	var	xAxis = d3.svg.axis().scale(x)
 		.orient("bottom").ticks(10).tickFormat(function(s){
@@ -254,8 +231,7 @@ function monthDataRenderMember(loan_data_member,label){
 		.attr("class","rect")
 		.attr("y",function(d){ return y(d.location);})
 		.attr("height",y.rangeBand())
-    	.attr("width",function(d){
-    		return x(+d.total);})
+    	.attr("width",0)
         .attr("transform",function(d,i){return "translate(60,0)";})
     	.style("fill",function(d){return color(d.location);})
     	.on("mouseover",function(d){
@@ -266,11 +242,14 @@ function monthDataRenderMember(loan_data_member,label){
     		})
     		.on("click",function(d){
     			clickMark(d,"memberdata");
-    		});
+    		})
+    	.transition().duration(1200)
+    	.attr("width",function(d){
+    		return x(+d.total);});
 
     svg_new.append("g")
 		.attr("class","x-axis")
-		.attr("transform", "translate(60," + (height) + ")")
+		.attr("transform", "translate(60," + (loans_height) + ")")
 		.call(xAxis)
 			.selectAll("text")	
             .style("text-anchor", "end")
@@ -296,14 +275,14 @@ function monthDataRenderMember(loan_data_member,label){
 	    	.attr("x1",function(d){ return x(meanValueMonth);})
 	    	.attr("x2", function(d){ return x(meanValueMonth);})
 	    	.attr("y1",25)
-	    	.attr("y2",height)
+	    	.attr("y2",loans_height)
 	    	.style("stroke","red")
 	    	.style("stroke-dasharray","4,3")
 	    	.style("stroke-width","2");
 
 	svg_new.append("text")
-		.attr("x",width)
-		.attr("y",height-5)
+		.attr("x",loans_width)
+		.attr("y",loans_height-5)
 		.style("font","black")
 		.text("Million");
 
@@ -417,18 +396,21 @@ function clickMarkMonth(data_new){
 			.attr("class","amount_circle")
 			.attr("cx", function(d,i){return 60+ (i*80);})
 			.attr("cy",75)
-			.attr("r",function(d){
-				return xClick((d));})
+			.attr("r",0)
 			.style("fill",function(d){ return monthColor(data_rect.amount.indexOf(d));})
-			.style("opacity","1");
+			.style("opacity","1")
+			.transition().duration(1200)
+			.attr("r",function(d){
+				return xClick((d));});
 
 		amount_circle.attr("r", function(d){ return xClick((d));});
 
 		amount_circle.append("text")
 			.attr("class","text")
-			.attr("dx",function(d,i){ return 50+(i*60);})
-			.attr("dy",135)
-			.text(function(d){ return d;});
+			.attr("x",function(d,i){ return ((i+1) * (x.rangeBand()));})
+			.attr("y",135)
+			.text(function(d){ return d;})
+			.style("text-anchor","middle");
 
 		circle.append("g")
 		.attr("class","x-axis")
@@ -463,7 +445,7 @@ function clickMarkMonth(data_new){
 
         var yRect = d3.scale.linear()
         				.domain([0,Math.max(col1,col2)])
-        				.range([height,30]);
+        				.range([loans_height,30]);
 
         var yRectAxis = d3.svg.axis().scale(yRect)
         					.orient("left").ticks(10);
@@ -474,21 +456,25 @@ function clickMarkMonth(data_new){
 
         loans_rect.append("rect")
         	.attr("class","loans_rect")
-        	.transition().delay(100).duration(500)
-        	.attr("height", function(d,i){ return (height - yRect(d.member));})
+        	.attr("height",0)
         	.attr("width",20)
         	.attr("x",function(d,i){ return 35+(i*50);})
+        	.attr("y",0)
+        	.style("fill","blue")
+        	.transition().duration(1200)
         	.attr("y",function(d,i){ return yRect(d.member);})
-        	.style("fill","blue");
+        	.attr("height", function(d,i){ return (loans_height - yRect(d.member));});
 
         loans_rect.append("rect")
         	.attr("class","loans_rect")
-        	.transition().delay(100).duration(500)
-        	.attr("height", function(d,i){ return (height - yRect(d.group));})
+        	.attr("height",0)
         	.attr("width",20)
         	.attr("x",function(d,i){ return (i*50)+55;})
+        	.attr("y",0)
+        	.style("fill","red")
+        	.transition().duration(1200)
         	.attr("y",function(d){ return yRect(d.group);})
-        	.style("fill","red");	
+        	.attr("height",function(d,i){ return (loans_height - yRect(d.group));});	
 
 	    svg_rect.append("g")
 			.attr("class","y-axis")
@@ -500,7 +486,7 @@ function clickMarkMonth(data_new){
 
 	    svg_rect.append("g")
 			.attr("class","x-axis")
-			.attr("transform","translate(0,"+(height+3)+")")
+			.attr("transform","translate(0,"+(loans_height+3)+")")
 			.call(xRectAxis)
 				.selectAll("text")
 				.style("text-anchor", "middle")
@@ -516,7 +502,7 @@ function clickMarkMonth(data_new){
         svg_rect.append("text")
 			.attr("class","text")
 			.attr("transform","translate(222,25)")
-			.style("font-size","15px")
+			.style("font-size","10px")
 			.text("Group");
     		
 
@@ -530,7 +516,7 @@ function clickMarkMonth(data_new){
     	svg_rect.append("text")
 			.attr("class","text")
 			.attr("transform","translate(222,45)")
-			.style("font-size","15px")
+			.style("font-size","10px")
 			.text("Member");
 
         //loans_rect.append("rect")
