@@ -65,8 +65,8 @@ function detailedReportMain(region){
 function renderlineChart(reportdata_new,label,number){	
 		
 	var svg = d3.select("#vis_container").append("svg")
-					.attr("width",pie_width)
-					.attr("height",pie_height+50)
+					.attr("width",pie_widthMonth)
+					.attr("height",pie_heightMonth+50)
 					.attr("class","svg")
 					.attr("transform","translate(0,"+margin.left+")")
 						.append("g")
@@ -74,7 +74,7 @@ function renderlineChart(reportdata_new,label,number){
 						
 	svg.append("svg:text")
 		.attr("class", "label")
-		.attr("x",(pie_width/2)-35)
+		.attr("x",(pie_widthMonth/2)-35)
 		.attr("y",-10)
 		.attr("text-anchor", "middle")
 		.style("font-weight","bold")
@@ -91,12 +91,12 @@ function renderlineChart(reportdata_new,label,number){
 
 	var x = d3.scale.ordinal()
 				.domain(reportdata_new.map(function(d){return d.month;}))
-				.rangeRoundBands([0,width],0.5);
+				.rangeRoundBands([0,width_month],0.5);
 
 	var y = d3.scale.linear()
 				//.domain([d3.min(reportdata_new,function(d){return d.total;}),d3.max(reportdata_new,function(d){return d.total;})])
 				.domain([0,d3.max(reportdata_new,function(d){return d.total;})])
-				.range([height,0]);
+				.range([height_month,0]);
 
 	// Define the axes
 	var	xAxis = d3.svg.axis().scale(x)
@@ -133,10 +133,11 @@ function renderlineChart(reportdata_new,label,number){
 		.append("rect")
 		.attr("class","rect")
 		.attr("x", function(d){ return x(d.month);})
-		.attr("y",function(d){ return y(d.total);})
+		.attr("y",height_month)
+		//.attr("y",function(d){ return y(d.total);})
 		.attr("width",x.rangeBand())
 		.attr("height",0)
-    	.style("fill",function(d){return colorMonth(d.month);})
+    	.style("fill","DarkCyan")//function(d){return colorMonth(d.month);})
     		.on("mouseover",function(d){
     			//console.log("inside hover");
     			tipDetailed.show(d,label);
@@ -145,16 +146,18 @@ function renderlineChart(reportdata_new,label,number){
     			tipDetailed.hide();
     		})
     	.transition().duration(1200)
+    	.attr("y",function(d){ return y(d.total);})
     	.attr("height",function(d){
-    		return height - y(d.total);});
+    		return height_month - y(d.total);});
 	
 
 	svg.append("g")
 		.attr("class","x-axis")
-		.attr("transform", "translate(0," + height + ")")
+		.attr("transform", "translate(0," + height_month + ")")
 		.call(xAxis)
 			.selectAll("text")	
             .style("text-anchor", "end")
+            .style("font-size","10px")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", function(d) {
@@ -164,21 +167,24 @@ function renderlineChart(reportdata_new,label,number){
 	svg.append("g")
 		.attr("class","y-axis")
 		.attr("transform","translate(0,0)")
-		.call(yAxis);
+		.call(yAxis)
+		.style("font-size","10px");
 
 	if(label == "Savings" || label == "Fixed Deposits" || label == "Repeat Loans"){
 		svg.append("text")
 			.attr("transform","rotate(-90)")
-			.attr("x", -(pie_width/2))
+			.attr("x", -(pie_widthMonth/2))
 			.attr("y",margin.right-5)
 			.style("font","black")
+			.style("font-size","12px")
 			.text("Million");
 	}
 
 	svg.append("text")
-		.attr("x",(width-10)/2)
-		.attr("y",height-5)
+		.attr("x",(width_month-10)/2)
+		.attr("y",height_month-5)
 		.style("font","black")
+		.style("font-size","12px")
 		.text("Month");
 
 

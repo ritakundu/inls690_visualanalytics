@@ -23,6 +23,8 @@ function monthDataDisbursed(dropdown_value){
 	d3.selectAll("#loan_container_new .svg_new").remove();
 	d3.selectAll("#loan_container_new #monthDistribution").remove();
 	d3.selectAll("#loan_container_new #loans_number").remove();
+	d3.selectAll("#loan_container_new #textContentMember").remove();
+	d3.selectAll("#loan_container #textContentGroup").remove();
 
 	var monthdata_filter_disbursed = month_data.filter(function(d){return d.month == month;});
 
@@ -290,13 +292,13 @@ function monthDataRenderMember(loan_data_member,label){
 
 function clickMarkMonth(data_new){
 
-		d3.selectAll("#textContent").remove();
+		d3.selectAll("#textContentGroup").remove();
 		d3.selectAll("#textContentMember").remove();
 		d3.selectAll("#monthDistribution").remove();		
 		d3.selectAll("#loans_number").remove();
 
 		var textSVG = d3.select("#loan_container").append("svg")
-						.attr("id","textContent")
+						.attr("id","textContentGroup")
 						.attr("height",200)
 						.attr("width",350);
 
@@ -350,7 +352,7 @@ function clickMarkMonth(data_new){
 	}
 
 	function clickMark(data_rect,label){
-		d3.selectAll("#textContent").remove();
+		d3.selectAll("#textContentGroup").remove();
 		d3.selectAll("#textContentMember").remove();
 		d3.selectAll("#monthDistribution").remove();
 		d3.selectAll("#loans_number").remove();
@@ -407,6 +409,7 @@ function clickMarkMonth(data_new){
 
 		amount_circle.append("text")
 			.attr("class","text")
+			.transition().delay(1200)
 			.attr("x",function(d,i){ return ((i+1) * (x.rangeBand()));})
 			.attr("y",135)
 			.text(function(d){ return d;})
@@ -426,7 +429,7 @@ function clickMarkMonth(data_new){
 
 		svg_rect.append("svg:text")
 			.attr("class", "label")
-			//.attr("y",15)
+			.attr("y",-10)
 			.attr("text-anchor", "middle")
 			.attr("transform","translate(120,20)")
 			.style("font-weight","bold") // text-align: right
@@ -435,7 +438,7 @@ function clickMarkMonth(data_new){
         var col1 = d3.max(data_rect.loan.map(function(d){return d.group;}),function(d){ return d;});
 		var col2 = d3.max(data_rect.loan.map(function(d){return d.member;}),function(d){return d;});
 
-
+		//svg_rect.call(tipDetailed);
 		var xRect = d3.scale.ordinal()
 					.domain([">150K","149k-50k","<49k"])
 					.rangeRoundBands([30,svg_width-20],0.1);
@@ -459,22 +462,43 @@ function clickMarkMonth(data_new){
         	.attr("height",0)
         	.attr("width",20)
         	.attr("x",function(d,i){ return 35+(i*50);})
-        	.attr("y",0)
+        	.attr("y",loans_height)
         	.style("fill","blue")
         	.transition().duration(1200)
-        	.attr("y",function(d,i){ return yRect(d.member);})
+        	.attr("y", function(d,i){ return yRect(d.member);})
         	.attr("height", function(d,i){ return (loans_height - yRect(d.member));});
+        	//.text(function(d){ return d.member});
+        loans_rect.append("text")
+			.attr("class","text")
+			.transition().delay(1200)
+			.attr("x",function(d,i){ return 35+(i*50);} )
+			.attr("y",function(d,i){ return yRect(d.member)-3;})
+			//.attr("transform","translate(222,25)")
+			.style("font-size","10px")
+			.style("text-anchor","start")
+			.text(function(d){return d.member});
 
         loans_rect.append("rect")
         	.attr("class","loans_rect")
         	.attr("height",0)
         	.attr("width",20)
         	.attr("x",function(d,i){ return (i*50)+55;})
-        	.attr("y",0)
+        	.attr("y",loans_height)
         	.style("fill","red")
         	.transition().duration(1200)
         	.attr("y",function(d){ return yRect(d.group);})
-        	.attr("height",function(d,i){ return (loans_height - yRect(d.group));});	
+        	.attr("height",function(d,i){ return (loans_height - yRect(d.group));})
+        	//.text(function(d){ return d.group});	
+
+        loans_rect.append("text")
+			.attr("class","text")
+			.transition().delay(1200)
+			.attr("x",function(d,i){ return 55+(i*50);} )
+			.attr("y",function(d,i){ return yRect(d.group)-3;})
+			//.attr("transform","translate(222,25)")
+			.style("font-size","10px")
+			.style("text-anchor","start")
+			.text(function(d){return d.group});
 
 	    svg_rect.append("g")
 			.attr("class","y-axis")
@@ -494,7 +518,7 @@ function clickMarkMonth(data_new){
 
 	    svg_rect.append("rect")
 	    	.attr("class","legend")
-    		.attr("width",20)
+    		.attr("width",15)
     		.attr("height",15)
         	.attr("transform","translate(200,15)")
         	.style("fill","red");
@@ -508,7 +532,7 @@ function clickMarkMonth(data_new){
 
 		svg_rect.append("rect")
 	    	.attr("class","legend")
-    		.attr("width",20)
+    		.attr("width",15)
     		.attr("height",15)
         	.attr("transform","translate(200,35)")
     		.style("fill","blue");   
@@ -523,7 +547,7 @@ function clickMarkMonth(data_new){
 	}
 
 function drawLegend(from_page){
-	d3.select("#vis_1").html("");
+	d3.selectAll("#vis_1 .legend").remove();
 	var legendSVG = d3.select("#vis_1").append("svg")
 						.attr("class","legend")
 						.attr("height",50)

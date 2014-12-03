@@ -1,6 +1,15 @@
 function monthmain(dropdown_selection){
 		console.log(dropdown_selection);
 		d3.selectAll("div.loans").remove();
+		d3.selectAll("#loan_container .svg_linechart").remove();
+		d3.selectAll("#loan_container .svg").remove();
+		d3.selectAll("#loan_container #monthDistribution").remove();
+		d3.selectAll("#loan_container #loans_number").remove();
+		d3.selectAll("#loan_container_new .svg_new").remove();
+		d3.selectAll("#loan_container_new #monthDistribution").remove();
+		d3.selectAll("#loan_container_new #loans_number").remove();
+		d3.selectAll("#loan_container_new #textContentMember").remove();
+		d3.selectAll("#loan_container #textContentGroup").remove();
 
 	if(dropdown_selection == "disbursed"){	
 		data_bankloan_groups = month_data.map(function(d){ return {

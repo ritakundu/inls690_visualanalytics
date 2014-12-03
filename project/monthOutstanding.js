@@ -13,7 +13,7 @@ function monthDataOutstanding(dropdown_value){
 	  .html(function(d) {
 	    return "<strong>Amount:</strong> <span style='color:red'>" + d.total + "</span>";
 	  });
-	var monthdata_filter_new = month_data.filter(function(d){return d.month == month;});
+	var monthdata_filter_outstanding = month_data.filter(function(d){return d.month == month;});
 
 	d3.selectAll("div.loans").remove();
 	d3.selectAll("#loan_container .svg_linechart").remove();
@@ -23,7 +23,9 @@ function monthDataOutstanding(dropdown_value){
 	d3.selectAll("#loan_container_new .svg_new").remove();
 	d3.selectAll("#loan_container_new #monthDistribution").remove();
 	d3.selectAll("#loan_container_new #loans_number").remove();
-	var bankloan_amt_grps = monthdata_filter_new.map(function(d){return {
+	d3.selectAll("#loan_container_new #textContentMember").remove();
+	d3.selectAll("#loan_container #textContentGroup").remove();
+	var bankloan_amt_grps = monthdata_filter_outstanding.map(function(d){return {
 						location : d.location,
 						total : +d.outstanding_bank_1_amount+d.outstanding_bank_2_amount+d.outstanding_bank_3_amount,
 						amount : [+d.outstanding_bank_1_amount,+d.outstanding_bank_2_amount,+d.outstanding_bank_3_amount],
@@ -31,7 +33,7 @@ function monthDataOutstanding(dropdown_value){
 					};
 				});
 	//bankloan_amt_grps = bankloan_amt_grps.filter(function(d){return (d.total != 0 && d.total != null); });
-	var bridgeloan_amt_grps = monthdata_filter_new.map(function(d){return {
+	var bridgeloan_amt_grps = monthdata_filter_outstanding.map(function(d){return {
 						location : d.location,
 						total : +d.outstanding_bridge_1_amount+d.outstanding_bridge_2_amount+d.outstanding_bridge_3_amount,
 						amount : [+d.outstanding_bridge_1_amount,+d.outstanding_bridge_2_amount,+d.outstanding_bridge_3_amount],
@@ -39,7 +41,7 @@ function monthDataOutstanding(dropdown_value){
 					};
 				});
 	//bridgeloan_amt_grps = bridgeloan_amt_grps.filter(function(d){return (d.total != 0 && d.total != null); });
-	var specialloan_amt_grps = monthdata_filter_new.map(function(d){return {
+	var specialloan_amt_grps = monthdata_filter_outstanding.map(function(d){return {
 						location : d.location,
 						total : +d.outstanding_special_loan_1_amount+d.outstanding_special_loan_2_amount+d.outstanding_special_loan_3_amount,
 						amount : [+d.outstanding_special_loan_1_amount,+d.outstanding_special_loan_2_amount,+d.outstanding_special_loan_3_amount],
@@ -47,7 +49,7 @@ function monthDataOutstanding(dropdown_value){
 					};
 				});
 	//specialloan_amt_grps = specialloan_amt_grps.filter(function(d){return (d.total != 0 && d.total != null); });
-	var bankloan_amt_member = monthdata_filter_new.map(function(d){return {
+	var bankloan_amt_member = monthdata_filter_outstanding.map(function(d){return {
 						location : d.location,
 						total : +d.outstanding_member_bank_1_amount+d.outstanding_member_bank_2_amount+d.outstanding_member_bank_3_amount,
 						amount : [+d.outstanding_member_bank_1_amount,+d.outstanding_member_bank_2_amount,+d.outstanding_member_bank_3_amount],
@@ -55,7 +57,7 @@ function monthDataOutstanding(dropdown_value){
 					};
 				});
 	//bankloan_amt_member = bankloan_amt_member.filter(function(d){return (d.total != 0 && d.total != null); });
-	var specialloan_amt_member = monthdata_filter_new.map(function(d){return {
+	var specialloan_amt_member = monthdata_filter_outstanding.map(function(d){return {
 						location : d.location,
 						total : +d.outstanding_member_special_loan_1_amount+d.outstanding_member_special_loan_2_amount+d.outstanding_member_special_loan_3_amount,
 						amount : [+d.outstanding_member_special_loan_1_amount,+d.outstanding_member_special_loan_2_amount,+d.outstanding_member_special_loan_3_amount],
@@ -63,33 +65,6 @@ function monthDataOutstanding(dropdown_value){
 					};
 				});
 
-	/*var legendSVG = d3.select("#vis").append("svg")
-						.attr("class","legend")
-						.attr("height",50)
-						.attr("width",700);
-
-    var legend = legendSVG.selectAll("g.rect")
-				        .data(monthdata_filter_new)
-				        .enter()
-				        .append("g")
-			        	.attr("class","rect");
-
-	legend.append("rect")
-			.attr("class","rect_legend")
-    		.attr("width",20)
-    		.attr("height",15)
-        	.attr("transform",function(d,i){return "translate(" + ((i+1)*60)+ ",15)";})
-    		.style("fill",function(d){return color(d.location);})
-    		.on("click",function(d){
-    			clickMarkMainNew(d)
-    			console.log(d);
-    		});
-
-		legend.append("text")
-			.attr("class","text")
-			.attr("y",14)
-			.attr("transform",function(d,i){return "translate(" + ((i+1)*60)+ ",30)";})
-			.text(function(d){return d.location;});*/
 
 	drawLegend("month");
 
@@ -102,7 +77,7 @@ function monthDataOutstanding(dropdown_value){
 
 function clickMarkMainNew(data_new){
 
-		d3.selectAll("#textContent").remove();
+		d3.selectAll("#textContentGroup").remove();
 		d3.selectAll("#textContentMember").remove();
 		d3.selectAll("#monthDistribution").remove();
 
