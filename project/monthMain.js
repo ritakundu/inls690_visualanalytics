@@ -167,7 +167,7 @@ function monthLineChart(loanData,label){
 
 	var xMonth = d3.scale.ordinal()
 					.domain(loanData.map(function(d){return d.month;}))
-					.rangeRoundBands([0,widthmonth],0.1);
+					.rangeRoundBands([0,widthmonth],1);
 
 	var xAxisMonth = d3.svg.axis().scale(xMonth)
 						.orient("bottom").tickFormat(function(s){

@@ -182,6 +182,14 @@ function monthDataRenderGroup(loan_data_group,label){
 	    	.style("stroke-width","2");
 
 	    svg.append("text")
+	    	.attr("dx",(x(meanValueGroup) + 50))
+	    	.attr("dy",25)
+	    	.style("text-anchor","start")
+	    	.style("font","black")
+	    	.style("font-size","10px")
+	    	.text(Math.round((meanValueGroup/1000000)*100)/100);
+
+	    svg.append("text")
 			.attr("x",loans_width)
 			.attr("y",loans_height-5)
 			.style("font","black")
@@ -283,6 +291,14 @@ function monthDataRenderMember(loan_data_member,label){
 	    	.style("stroke-width","2");
 
 	svg_new.append("text")
+	    	.attr("dx",(x(meanValueMonth) + 50))
+	    	.attr("dy",25)
+	    	.style("text-anchor","start")
+	    	.style("font","black")
+	    	.style("font-size","10px")
+	    	.text(Math.round((meanValueMonth/1000000)*100)/100);
+
+	svg_new.append("text")
 		.attr("x",loans_width)
 		.attr("y",loans_height-5)
 		.style("font","black")
@@ -378,6 +394,7 @@ function clickMarkMonth(data_new){
 			var circle = d3.select("#loan_container_new").append("svg");
 			var svg_rect = d3.select("#loan_container_new").append("svg");
 		}
+
 		circle.attr("id","monthDistribution")
 			.attr("height",200)
 			.attr("width",280);
@@ -387,7 +404,7 @@ function clickMarkMonth(data_new){
 			.attr("text-anchor", "middle")
 			.attr("transform","translate(140,20)")
 			.style("font-weight","bold") // text-align: right
-			.text("Amount Distribution");
+			.text("Amount Distribution - "+data_rect.location);
 
 		var amount_circle = circle.selectAll("g.amount_circle").data(data_rect.amount,function(d){ return d;});
 
@@ -433,7 +450,7 @@ function clickMarkMonth(data_new){
 			.attr("text-anchor", "middle")
 			.attr("transform","translate(120,20)")
 			.style("font-weight","bold") // text-align: right
-			.text("Groups & Members");
+			.text("Groups & Members - " + data_rect.location);
 
         var col1 = d3.max(data_rect.loan.map(function(d){return d.group;}),function(d){ return d;});
 		var col2 = d3.max(data_rect.loan.map(function(d){return d.member;}),function(d){return d;});
@@ -548,6 +565,7 @@ function clickMarkMonth(data_new){
 
 function drawLegend(from_page){
 	d3.selectAll("#vis_1 .legend").remove();
+
 	var legendSVG = d3.select("#vis_1").append("svg")
 						.attr("class","legend")
 						.attr("height",50)
@@ -579,6 +597,7 @@ function drawLegend(from_page){
 		.attr("y",14)
 		.attr("transform",function(d,i){return "translate(" + ((i+1)*60)+ ",30)";})
 		.text(function(d){return d.location;});
+
 	}
 
 	
